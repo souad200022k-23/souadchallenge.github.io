@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي 90 يوم | بناء النسخة الجديدة</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #0f0f1a;
+    min-height: 100vh;
+    padding: 20px;
+    color: #f0e6d3;
+  }
+  .header {
+    text-align: center;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border-radius: 24px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 60%);
+  }
+  .header h1 { font-size: 26px; font-weight: 900; color: #d4af37; position: relative; }
+  .header p { font-size: 13px; color: #a0a0c0; margin-top: 5px; position: relative; }
+  .day-counter {
+    font-size: 60px; font-weight: 900;
+    color: #d4af37; line-height: 1;
+    position: relative;
+  }
+  .day-label { font-size: 13px; color: #a0a0c0; margin-top: 5px; position: relative; }
+
+  .phase-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+  .phase-tab {
+    flex: 1; padding: 12px 5px; text-align: center;
+    border-radius: 14px; font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.3s;
+    border: 2px solid transparent;
+    background: #1a1a2e;
+    color: #a0a0c0;
+  }
+  .phase-tab.active {
+    background: linear-gradient(135deg, #d4af37, #f0d060);
+    color: #0f0f1a;
+    border-color: #d4af37;
+  }
+
+  .card {
+    background: #1a1a2e;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(212,175,55,0.15);
+  }
+  .card-title {
+    font-size: 15px; font-weight: 700;
+    color: #d4af37; margin-bottom: 15px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* شبكة الأيام */
+  .days-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 5px;
+  }
+  .day-dot {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    background: #0f0f1a;
+    border: 1px solid rgba(212,175,55,0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px; color: transparent;
+  }
+  .day-dot.completed { background: #d4af37; color: #0f0f1a; }
+  .day-dot.today { border-color: #d4af37; border-width: 2px; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,0.4)} 50%{box-shadow:0 0 0 5px rgba(212,175,55,0)} }
+
+  .habit-item {
+    display: flex; align-items: center;
+    gap: 12px; padding: 12px;
+    border-radius: 12px; background: #0f0f1a;
+    margin-bottom: 8px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .habit-item:hover { background: #16213e; }
+  .habit-check {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid #d4af37;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; transition: all 0.2s;
+  }
+  .habit-item.checked .habit-check {
+    background: #d4af37; color: #0f0f1a;
+  }
+  .habit-item.checked span { text-decoration: line-through; opacity: 0.5; }
+
+  .quote-box {
+    background: linear-gradient(135deg, #16213e, #1a1a2e);
+    border-right: 4px solid #d4af37;
+    border-radius: 15px;
+    padding: 18px;
+    font-size: 15px; line-height: 1.8;
+    color: #f0e6d3; font-style: italic;
+    margin-bottom: 15px;
+  }
+
+  .reflection-area {
+    width: 100%; min-height: 100px;
+    background: #0f0f1a; border: none;
+    border-radius: 12px; padding: 14px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px; color: #f0e6d3;
+    resize: none; outline: none; line-height: 1.8;
+    text-align: right;
+  }
+  .reflection-area:focus { border: 1px solid rgba(212,175,55,0.3); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-box {
+    background: #0f0f1a;
+    border-radius: 14px; padding: 15px;
+    text-align: center;
+  }
+  .stat-num { font-size: 28px; font-weight: 900; color: #d4af37; }
+  .stat-label { font-size: 11px; color: #a0a0c0; margin-top: 3px; }
+
+  .complete-day-btn {
+    width: 100%; padding: 18px;
+    background: linear-gradient(135deg, #d4af37, #f0d060);
+    border: none; border-radius: 16px;
+    color: #0f0f1a; font-size: 17px; font-weight: 900;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; margin-top: 15px;
+    transition: transform 0.2s;
+  }
+  .complete-day-btn:hover { transform: scale(1.02); }
+  .xp-bar { height: 10px; background: #0f0f1a; border-radius: 10px; overflow: hidden; margin-top: 8px; }
+  .xp-fill { height: 100%; background: linear-gradient(90deg, #d4af37, #f0d060); border-radius: 10px; transition: width 0.5s; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="day-counter" id="currentDay">1</div>
+  <div class="day-label">يوم من رحلتك</div>
+  <h1>🌟 بناء النسخة الجديدة</h1>
+  <p>تحدي 90 يوماً للتحول الحقيقي</p>
+</div>
+
+<div class="phase-tabs">
+  <div class="phase-tab active" onclick="setPhase(1,this)">المرحلة 1<br><small>البداية</small></div>
+  <div class="phase-tab" onclick="setPhase(2,this)">المرحلة 2<br><small>التعمق</small></div>
+  <div class="phase-tab" onclick="setPhase(3,this)">المرحلة 3<br><small>التثبيت</small></div>
+</div>
+
+<!-- الإحصائيات -->
+<div class="card">
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num" id="completedDays">0</div>
+      <div class="stat-label">يوم مكتمل</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="currentStreak">0</div>
+      <div class="stat-label">سلسلة متواصلة 🔥</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="remainingDays">90</div>
+      <div class="stat-label">يوم متبقي</div>
+    </div>
+  </div>
+  <div class="xp-bar" style="margin-top:12px">
+    <div class="xp-fill" id="xpFill" style="width:0%"></div>
+  </div>
+  <div style="text-align:center; font-size:11px; color:#a0a0c0; margin-top:5px" id="xpText">0% من الرحلة مكتملة</div>
+</div>
+
+<!-- شبكة 90 يوم -->
+<div class="card">
+  <div class="card-title">📅 خريطة 90 يوماً</div>
+  <div class="days-grid" id="daysGrid"></div>
+</div>
+
+<!-- عادات اليوم -->
+<div class="card">
+  <div class="card-title">⚡ عادات اليوم</div>
+  <div id="habitList"></div>
+</div>
+
+<!-- اقتباس اليوم -->
+<div class="quote-box" id="quoteBox"></div>
+
+<!-- تأمل اليوم -->
+<div class="card">
+  <div class="card-title">💬 تأملي اليوم</div>
+  <textarea class="reflection-area" placeholder="كيف كان يومك؟ ماذا تعلمتِ؟ ما الذي ستغيرينه غداً؟"></textarea>
+</div>
+
+<button class="complete-day-btn" onclick="completeDay()">✅ أنهيت يومي بنجاح!</button>
+
+<script>
+  let state = JSON.parse(localStorage.getItem('challenge90') || '{}');
+  if(!state.completedDays) state.completedDays = [];
+  if(!state.currentDay) state.currentDay = 1;
+
+  const habits = [
+    { icon: '🧘', text: 'تأمل / صلاة / هدوء داخلي' },
+    { icon: '📚', text: 'تعلم شيء جديد لمدة 30 دقيقة' },
+    { icon: '🏃', text: 'حركة جسدية / رياضة' },
+    { icon: '✍️', text: 'الكتابة في مفكرتي' },
+    { icon: '💧', text: '8 أكواب ماء' },
+    { icon: '📵', text: 'ساعة بدون هاتف' },
+  ];
+
+  const quotes = [
+    'كل يوم جديد هو فرصة لتكوني نسخة أفضل من نفسك 🌱',
+    'التغيير لا يحدث في يوم واحد، لكنه يبدأ في يوم واحد ✨',
+    'ثقي بالعملية، الاتساق هو السر 🔑',
+    'أنتِ أقوى مما تتصورين، واصلي 💪',
+    'كل خطوة صغيرة تُقربكِ من النسخة التي تحلمين بها 🌟',
+  ];
+
+  function buildGrid() {
+    const grid = document.getElementById('daysGrid');
+    grid.innerHTML = '';
+    for(let i=1; i<=90; i++) {
+      const d = document.createElement('div');
+      d.className = 'day-dot' + 
+        (state.completedDays.includes(i) ? ' completed' : '') +
+        (i === state.currentDay ? ' today' : '');
+      d.title = `يوم ${i}`;
+      d.textContent = i;
+      d.style.fontSize = '7px';
+      d.style.color = state.completedDays.includes(i) ? '#0f0f1a' : '#333';
+      grid.appendChild(d);
+    }
+  }
+
+  function buildHabits() {
+    const list = document.getElementById('habitList');
+    list.innerHTML = habits.map((h,i) => `
+      <div class="habit-item" id="habit${i}" onclick="toggleHabit(${i})">
+        <div class="habit-check" id="check${i}"></div>
+        <span>${h.icon} ${h.text}</span>
+      </div>
+    `).join('');
+  }
+
+  let checkedHabits = new Set();
+  function toggleHabit(i) {
+    checkedHabits.has(i) ? checkedHabits.delete(i) : checkedHabits.add(i);
+    document.getElementById(`habit${i}`).classList.toggle('checked');
+    document.getElementById(`check${i}`).textContent = checkedHabits.has(i) ? '✓' : '';
+  }
+
+  function setPhase(p, el) {
+    document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function updateStats() {
+    const done = state.completedDays.length;
+    document.getElementById('completedDays').textContent = done;
+    document.getElementById('remainingDays').textContent = 90 - done;
+    document.getElementById('currentDay').textContent = state.currentDay;
+    const pct = Math.round(done/90*100);
+    document.getElementById('xpFill').style.width = pct + '%';
+    document.getElementById('xpText').textContent = pct + '% من الرحلة مكتملة';
+    // streak
+    let streak = 0;
+    for(let i=done; i>=1; i--) { if(state.completedDays.includes(i)) streak++; else break; }
+    document.getElementById('currentStreak').textContent = streak;
+  }
+
+  function completeDay() {
+    if(!state.completedDays.includes(state.currentDay)) {
+      state.completedDays.push(state.currentDay);
+      if(state.currentDay < 90) state.currentDay++;
+      localStorage.setItem('challenge90', JSON.stringify(state));
+      buildGrid(); updateStats();
+      const btn = document.querySelector('.complete-day-btn');
+      btn.textContent = '🎉 أحسنتِ! يوم رائع!';
+      btn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+      setTimeout(() => {
+        btn.textContent = '✅ أنهيت يومي بنجاح!';
+        btn.style.background = 'linear-gradient(135deg, #d4af37, #f0d060)';
+      }, 3000);
+    }
+  }
+
+  // اقتباس عشوائي
+  document.getElementById('quoteBox').textContent = '"' + quotes[Math.floor(Math.random()*quotes.length)] + '"';
+
+  buildGrid(); buildHabits(); updateStats();
+</script>
+</body>
+</html>

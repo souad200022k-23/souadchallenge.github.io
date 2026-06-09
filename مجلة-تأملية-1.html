@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مجلتي التأملية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #1c1c1c;
+    min-height: 100vh;
+    padding: 20px;
+    color: #e8dcc8;
+  }
+
+  /* الغلاف -->
+  .cover {
+    background: linear-gradient(160deg, #2d1b00, #4a2d0a, #2d1b00);
+    border-radius: 24px;
+    padding: 40px 25px;
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative; overflow: hidden;
+    border: 1px solid rgba(212,160,50,0.3);
+  }
+  .cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4a032' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .cover-icon { font-size: 50px; position: relative; }
+  .cover h1 { font-size: 28px; font-weight: 900; color: #d4a032; position: relative; margin-top: 10px; }
+  .cover p { font-size: 13px; color: rgba(232,220,200,0.6); position: relative; margin-top: 6px; font-style: italic; }
+  .cover-date { 
+    display: inline-block; background: rgba(212,160,50,0.15);
+    border: 1px solid rgba(212,160,50,0.3);
+    border-radius: 20px; padding: 6px 16px;
+    font-size: 13px; color: #d4a032;
+    margin-top: 15px; position: relative;
+  }
+
+  /* الصفحات -->
+  .page {
+    background: #f4ede0;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 15px;
+    position: relative;
+    color: #2c1810;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  .page::before {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #d4a032, #a06020);
+    border-radius: 0 20px 20px 0;
+  }
+  /* خطوط الصفحة */
+  .lined-bg {
+    background-image: repeating-linear-gradient(
+      transparent, transparent 29px,
+      rgba(100,60,20,0.12) 30px
+    );
+  }
+
+  .page-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(212,160,50,0.3);
+    padding-bottom: 12px;
+  }
+  .page-icon { font-size: 22px; }
+  .page-title { font-size: 16px; font-weight: 800; color: #4a2d0a; }
+
+  .journal-input {
+    width: 100%; background: transparent; border: none;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; color: #2c1810;
+    line-height: 2; resize: none; outline: none;
+    text-align: right; min-height: 120px;
+  }
+  .journal-input::placeholder { color: rgba(44,24,16,0.4); }
+
+  /* الامتنان */
+  .gratitude-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(100,60,20,0.2);
+  }
+  .gratitude-num { 
+    width: 28px; height: 28px; flex-shrink: 0;
+    background: linear-gradient(135deg, #d4a032, #a06020);
+    border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: white;
+  }
+  .gratitude-input {
+    flex: 1; border: none; background: transparent;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px; color: #2c1810;
+    outline: none; text-align: right;
+    line-height: 1.6;
+  }
+
+  /* الأسئلة التأملية */
+  .prompt-card {
+    background: linear-gradient(135deg, #2d1b00, #3a2208);
+    border-radius: 16px; padding: 18px;
+    margin-bottom: 12px;
+    border: 1px solid rgba(212,160,50,0.2);
+  }
+  .prompt-q { font-size: 14px; color: #d4a032; font-weight: 700; margin-bottom: 10px; }
+  .prompt-a {
+    width: 100%; background: rgba(244,237,224,0.08);
+    border: 1px solid rgba(212,160,50,0.15);
+    border-radius: 10px; padding: 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px; color: #e8dcc8;
+    resize: none; outline: none; text-align: right;
+    line-height: 1.8;
+  }
+  .prompt-a::placeholder { color: rgba(232,220,200,0.3); }
+
+  /* التنفس */
+  .breathe-circle {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212,160,50,0.3), rgba(212,160,50,0.05));
+    border: 3px solid rgba(212,160,50,0.4);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 20px auto; cursor: pointer;
+    transition: all 4s ease-in-out;
+    text-align: center;
+  }
+  .breathe-circle.expand {
+    width: 170px; height: 170px;
+    background: radial-gradient(circle, rgba(212,160,50,0.5), rgba(212,160,50,0.1));
+  }
+  .breathe-text { font-size: 14px; color: #d4a032; font-weight: 700; }
+  .breathe-sub { font-size: 11px; color: rgba(212,160,50,0.6); }
+
+  /* مقياس الطاقة -->
+  .energy-scale { display: flex; justify-content: space-between; gap: 5px; margin-top: 10px; }
+  .energy-dot {
+    flex: 1; height: 30px; border-radius: 8px;
+    cursor: pointer; transition: all 0.2s;
+    opacity: 0.3;
+  }
+  .energy-dot.e1 { background: #e74c3c; }
+  .energy-dot.e2 { background: #e67e22; }
+  .energy-dot.e3 { background: #f39c12; }
+  .energy-dot.e4 { background: #27ae60; }
+  .energy-dot.e5 { background: #2ecc71; }
+  .energy-dot.selected { opacity: 1; transform: scaleY(1.2); }
+
+  .save-btn {
+    width: 100%; padding: 18px;
+    background: linear-gradient(135deg, #d4a032, #a06020);
+    border: none; border-radius: 18px;
+    color: white; font-size: 17px; font-weight: 900;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer; margin-top: 10px;
+    transition: all 0.2s;
+    box-shadow: 0 8px 25px rgba(212,160,50,0.25);
+  }
+  .save-btn:hover { transform: translateY(-2px); }
+</style>
+</head>
+<body>
+
+<!-- الغلاف -->
+<div class="cover">
+  <div class="cover-icon">🌙</div>
+  <h1>مجلتي التأملية</h1>
+  <p>"الكتابة هي الطريق للداخل"</p>
+  <div class="cover-date" id="todayDate"></div>
+</div>
+
+<!-- مستوى الطاقة -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-icon">⚡</div>
+    <div class="page-title">مستوى طاقتي اليوم</div>
+  </div>
+  <div class="energy-scale">
+    <div class="energy-dot e1" onclick="selectEnergy(1)"></div>
+    <div class="energy-dot e2" onclick="selectEnergy(2)"></div>
+    <div class="energy-dot e3" onclick="selectEnergy(3)"></div>
+    <div class="energy-dot e4" onclick="selectEnergy(4)"></div>
+    <div class="energy-dot e5" onclick="selectEnergy(5)"></div>
+  </div>
+  <div style="display:flex; justify-content:space-between; font-size:11px; color:#888; margin-top:5px;">
+    <span>⬅️ مُرهق جداً</span><span>نشيطة جداً ➡️</span>
+  </div>
+</div>
+
+<!-- الامتنان -->
+<div class="page">
+  <div class="page-header">
+    <div class="page-icon">🌸</div>
+    <div class="page-title">ممتنة اليوم على...</div>
+  </div>
+  <div class="gratitude-item">
+    <div class="gratitude-num">١</div>
+    <input class="gratitude-input" placeholder="ما الذي يسعدك اليوم؟">
+  </div>
+  <div class="gratitude-item">
+    <div class="gratitude-num">٢</div>
+    <input class="gratitude-input" placeholder="شيء جميل حدث...">
+  </div>
+  <div class="gratitude-item">
+    <div class="gratitude-num">٣</div>
+    <input class="gratitude-input" placeholder="شخص أو لحظة...">
+  </div>
+</div>
+
+<!-- تنفس واعٍ -->
+<div style="background:#2d1b00; border-radius:20px; padding:20px; margin-bottom:15px; text-align:center; border:1px solid rgba(212,160,50,0.2)">
+  <div style="font-size:14px; color:#d4a032; font-weight:700; margin-bottom:5px">🫁 لحظة تنفس واعٍ</div>
+  <div style="font-size:12px; color:rgba(232,220,200,0.5); margin-bottom:10px">اضغطي على الدائرة وتنفسي معها</div>
+  <div class="breathe-circle" id="breatheCircle" onclick="startBreathe()">
+    <div class="breathe-text" id="breatheText">ابدئي</div>
+    <div class="breathe-sub" id="breatheSub">اضغطي</div>
+  </div>
+</div>
+
+<!-- أسئلة تأملية -->
+<div style="margin-bottom:15px">
+  <div style="font-size:15px; font-weight:800; color:#d4a032; margin-bottom:12px; text-align:center">💭 أسئلة للتأمل</div>
+  <div class="prompt-card">
+    <div class="prompt-q">✦ ما الذي جعلك تبتسمين اليوم؟</div>
+    <textarea class="prompt-a" rows="3" placeholder="اكتبي بحرية..."></textarea>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-q">✦ ما الذي تودين أن تُخبريه لنفسك الصغيرة؟</div>
+    <textarea class="prompt-a" rows="3" placeholder="اكتبي بحرية..."></textarea>
+  </div>
+  <div class="prompt-card">
+    <div class="prompt-q">✦ ما خطوة واحدة ستفعلينها غداً تجاه حلمك؟</div>
+    <textarea class="prompt-a" rows="3" placeholder="اكتبي بحرية..."></textarea>
+  </div>
+</div>
+
+<!-- الكتابة الحرة -->
+<div class="page lined-bg">
+  <div class="page-header">
+    <div class="page-icon">📖</div>
+    <div class="page-title">أكتب ما في قلبي</div>
+  </div>
+  <textarea class="journal-input" rows="8" placeholder="لا حدود هنا... اكتبي كل ما يجول في خاطرك 🌊"></textarea>
+</div>
+
+<button class="save-btn" onclick="savePage()">🌙 أغلق مجلتي لهذا اليوم</button>
+
+<script>
+  // التاريخ
+  const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const now = new Date();
+  document.getElementById('todayDate').textContent = `${days[now.getDay()]}، ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+  // الطاقة
+  function selectEnergy(n) {
+    document.querySelectorAll('.energy-dot').forEach((d,i) => {
+      d.classList.toggle('selected', i < n);
+    });
+  }
+
+  // التنفس
+  let breatheActive = false;
+  let breathePhase = 0;
+  const phases = [
+    { text: 'تنفسي للداخل', sub: '4 ثوانٍ', duration: 4000 },
+    { text: 'احبسي نفسك', sub: '4 ثوانٍ', duration: 4000 },
+    { text: 'أخرجي الهواء', sub: '6 ثوانٍ', duration: 6000 },
+    { text: 'استريحي', sub: '2 ثانية', duration: 2000 },
+  ];
+
+  function startBreathe() {
+    if(breatheActive) return;
+    breatheActive = true;
+    runPhase(0, 5);
+  }
+
+  function runPhase(phase, remaining) {
+    if(remaining === 0) {
+      document.getElementById('breatheText').textContent = 'أحسنتِ!';
+      document.getElementById('breatheSub').textContent = '🌸';
+      document.getElementById('breatheCircle').classList.remove('expand');
+      breatheActive = false;
+      return;
+    }
+    const p = phases[phase];
+    document.getElementById('breatheText').textContent = p.text;
+    document.getElementById('breatheSub').textContent = p.sub;
+    if(phase === 0) document.getElementById('breatheCircle').classList.add('expand');
+    if(phase === 2) document.getElementById('breatheCircle').classList.remove('expand');
+    const nextPhase = (phase + 1) % phases.length;
+    const nextRemaining = nextPhase === 0 ? remaining - 1 : remaining;
+    setTimeout(() => runPhase(nextPhase, nextRemaining), p.duration);
+  }
+
+  // الحفظ
+  function savePage() {
+    const btn = document.querySelector('.save-btn');
+    btn.textContent = '✨ مجلتك محفوظة. أحسنتِ اليوم!';
+    btn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
+    setTimeout(() => {
+      btn.textContent = '🌙 أغلق مجلتي لهذا اليوم';
+      btn.style.background = 'linear-gradient(135deg, #d4a032, #a06020)';
+    }, 3000);
+  }
+</script>
+</body>
+</html>

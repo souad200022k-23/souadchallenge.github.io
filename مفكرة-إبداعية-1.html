@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مفكرة الأفكار والإلهام</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #f5f0ea;
+    min-height: 100vh;
+    padding: 20px;
+    color: #2c1810;
+  }
+  .header {
+    background: linear-gradient(135deg, #2c1810, #5c3317);
+    border-radius: 24px;
+    padding: 30px 25px;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .header::after {
+    content: '✨';
+    position: absolute;
+    font-size: 120px;
+    opacity: 0.05;
+    top: -20px; left: -20px;
+  }
+  .header h1 { font-size: 26px; color: #f5c842; font-weight: 900; position: relative; }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 5px; position: relative; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+  .tab {
+    flex-shrink: 0; padding: 10px 18px;
+    border-radius: 25px; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.3s;
+    background: white; color: #2c1810;
+    border: 2px solid transparent;
+  }
+  .tab.active { background: #2c1810; color: #f5c842; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* بطاقات الأفكار */
+  .idea-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .idea-card {
+    border-radius: 18px;
+    padding: 18px;
+    position: relative;
+    min-height: 120px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .idea-card:hover { transform: translateY(-3px); }
+  .idea-card.c1 { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+  .idea-card.c2 { background: linear-gradient(135deg, #fd79a8, #e84393); color: white; }
+  .idea-card.c3 { background: linear-gradient(135deg, #74b9ff, #0984e3); color: white; }
+  .idea-card.c4 { background: linear-gradient(135deg, #55efc4, #00b894); }
+  .idea-card.c5 { background: linear-gradient(135deg, #a29bfe, #6c5ce7); color: white; }
+  .idea-card.c6 { background: linear-gradient(135deg, #ffeaa7, #e17055); color: white; }
+  .idea-tag { font-size: 10px; font-weight: 700; opacity: 0.7; text-transform: uppercase; margin-bottom: 8px; }
+  .idea-text {
+    font-size: 13px; font-weight: 600; line-height: 1.6;
+    border: none; background: transparent;
+    width: 100%; resize: none; outline: none;
+    font-family: 'Tajawal', sans-serif;
+    color: inherit;
+  }
+  .idea-text::placeholder { opacity: 0.6; }
+  .add-idea {
+    width: 100%; padding: 15px;
+    border: 3px dashed #c8a882;
+    border-radius: 18px; background: transparent;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px; color: #5c3317;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s; margin-top: 12px;
+  }
+  .add-idea:hover { background: rgba(255,255,255,0.5); }
+
+  /* لوح الرؤية */
+  .vision-section { }
+  .goal-card {
+    background: white;
+    border-radius: 18px; padding: 18px;
+    margin-bottom: 12px;
+    border-right: 5px solid #f5c842;
+  }
+  .goal-title-input {
+    width: 100%; border: none; background: transparent;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; font-weight: 700; color: #2c1810;
+    outline: none;
+    text-align: right;
+  }
+  .goal-desc {
+    width: 100%; border: none; background: #f5f0ea;
+    border-radius: 10px; padding: 10px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px; color: #5c3317;
+    outline: none; resize: none; margin-top: 10px;
+    text-align: right;
+  }
+  .goal-deadline {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 10px; font-size: 12px; color: #888;
+  }
+  .goal-deadline input { border: none; background: transparent; font-family: 'Tajawal', sans-serif; font-size: 12px; color: #888; }
+  .goal-progress { height: 6px; background: #f5f0ea; border-radius: 10px; margin-top: 10px; overflow: hidden; }
+  .goal-prog-fill { height: 100%; background: linear-gradient(90deg, #f5c842, #e17055); border-radius: 10px; transition: width 0.3s; }
+
+  /* مساحة الكتابة الحرة */
+  .free-write {
+    width: 100%; min-height: 300px;
+    background: white;
+    border-radius: 20px; padding: 25px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px; line-height: 2;
+    color: #2c1810; border: none; outline: none;
+    resize: none; text-align: right;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  }
+  .word-count { text-align: left; font-size: 11px; color: #888; margin-top: 5px; }
+
+  /* عداد الكلمات */
+  .bucket-list { }
+  .bucket-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 15px; background: white;
+    border-radius: 12px; margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .bucket-star { font-size: 20px; cursor: pointer; }
+  .bucket-star.active { filter: brightness(1); }
+  .bucket-star:not(.active) { filter: grayscale(1) opacity(0.3); }
+
+  .fab {
+    position: fixed; bottom: 80px; left: 20px;
+    width: 55px; height: 55px;
+    background: linear-gradient(135deg, #f5c842, #e17055);
+    border-radius: 50%; border: none;
+    font-size: 24px; cursor: pointer;
+    box-shadow: 0 8px 25px rgba(245,200,66,0.4);
+    transition: transform 0.2s;
+  }
+  .fab:hover { transform: scale(1.1) rotate(90deg); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>✨ مفكرتي الإبداعية</h1>
+  <p>مساحتك للأفكار، الأحلام، والإلهام</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('ideas',this)">💡 أفكاري</div>
+  <div class="tab" onclick="switchTab('goals',this)">🎯 أهدافي</div>
+  <div class="tab" onclick="switchTab('freewrite',this)">✍️ أكتب بحرية</div>
+  <div class="tab" onclick="switchTab('bucket',this)">⭐ قائمة أحلامي</div>
+</div>
+
+<!-- أفكاري -->
+<div id="ideas" class="section active">
+  <div class="idea-grid" id="ideaGrid">
+    <div class="idea-card c1">
+      <div class="idea-tag">💡 فكرة محتوى</div>
+      <textarea class="idea-text" rows="4" placeholder="اكتبي فكرتك هنا..."></textarea>
+    </div>
+    <div class="idea-card c2">
+      <div class="idea-tag">🎯 هدف</div>
+      <textarea class="idea-text" rows="4" placeholder="ما الذي تريدين تحقيقه؟"></textarea>
+    </div>
+    <div class="idea-card c3">
+      <div class="idea-tag">📚 تعلم</div>
+      <textarea class="idea-text" rows="4" placeholder="ماذا تريدين أن تتعلمي؟"></textarea>
+    </div>
+    <div class="idea-card c4">
+      <div class="idea-tag">💬 اقتباس</div>
+      <textarea class="idea-text" rows="4" placeholder="اقتباس يلهمك..."></textarea>
+    </div>
+  </div>
+  <button class="add-idea" onclick="addIdea()">+ إضافة بطاقة جديدة</button>
+</div>
+
+<!-- أهدافي -->
+<div id="goals" class="section">
+  <div id="goalsList">
+    <div class="goal-card">
+      <input class="goal-title-input" placeholder="🎯 اسم الهدف..." value="">
+      <textarea class="goal-desc" rows="2" placeholder="كيف ستحققين هذا الهدف؟"></textarea>
+      <div class="goal-deadline">📅 <input type="date"></div>
+      <div style="display:flex; align-items:center; gap:10px; margin-top:8px">
+        <span style="font-size:12px;color:#888">التقدم:</span>
+        <input type="range" min="0" max="100" value="0" oninput="updateProgress(this)" style="flex:1">
+        <span class="progress-val" style="font-size:12px; color:#f5c842; font-weight:700">0%</span>
+      </div>
+      <div class="goal-progress"><div class="goal-prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+  <button class="add-idea" onclick="addGoal()">+ إضافة هدف جديد</button>
+</div>
+
+<!-- الكتابة الحرة -->
+<div id="freewrite" class="section">
+  <textarea class="free-write" id="freeWriteArea" placeholder="اكتبي بحرية... لا قواعد، لا حدود. فقط أنتِ وأفكارك 🌊" oninput="countWords()"></textarea>
+  <div class="word-count" id="wordCount">0 كلمة</div>
+</div>
+
+<!-- قائمة أحلامي -->
+<div id="bucket" class="section">
+  <div id="bucketList">
+    <div class="bucket-item">
+      <span class="bucket-star active" onclick="toggleStar(this)">⭐</span>
+      <input style="flex:1; border:none; background:transparent; font-family:'Tajawal',sans-serif; font-size:14px; color:#2c1810; outline:none; text-align:right" placeholder="حلم أريد تحقيقه...">
+    </div>
+    <div class="bucket-item">
+      <span class="bucket-star" onclick="toggleStar(this)">⭐</span>
+      <input style="flex:1; border:none; background:transparent; font-family:'Tajawal',sans-serif; font-size:14px; color:#2c1810; outline:none; text-align:right" placeholder="مكان أريد زيارته...">
+    </div>
+    <div class="bucket-item">
+      <span class="bucket-star" onclick="toggleStar(this)">⭐</span>
+      <input style="flex:1; border:none; background:transparent; font-family:'Tajawal',sans-serif; font-size:14px; color:#2c1810; outline:none; text-align:right" placeholder="شيء أريد تعلمه...">
+    </div>
+  </div>
+  <button class="add-idea" onclick="addBucket()">+ إضافة حلم جديد</button>
+</div>
+
+<button class="fab" onclick="alert('حُفظت مفكرتك! 🌟')">💾</button>
+
+<script>
+  const colors = ['c1','c2','c3','c4','c5','c6'];
+  const tags = ['💡 فكرة','🎯 هدف','📚 تعلم','💬 اقتباس','🌟 إلهام','🔥 محتوى'];
+  let colorIdx = 0;
+
+  function switchTab(tab, el) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+    el.classList.add('active');
+  }
+
+  function addIdea() {
+    const grid = document.getElementById('ideaGrid');
+    const card = document.createElement('div');
+    card.className = `idea-card ${colors[colorIdx % colors.length]}`;
+    card.innerHTML = `<div class="idea-tag">${tags[colorIdx % tags.length]}</div><textarea class="idea-text" rows="4" placeholder="اكتبي فكرتك..."></textarea>`;
+    grid.appendChild(card);
+    colorIdx++;
+  }
+
+  function addGoal() {
+    const list = document.getElementById('goalsList');
+    const card = document.createElement('div');
+    card.className = 'goal-card';
+    card.innerHTML = `
+      <input class="goal-title-input" placeholder="🎯 اسم الهدف...">
+      <textarea class="goal-desc" rows="2" placeholder="كيف ستحققين هذا الهدف؟"></textarea>
+      <div class="goal-deadline">📅 <input type="date"></div>
+      <div style="display:flex; align-items:center; gap:10px; margin-top:8px">
+        <span style="font-size:12px;color:#888">التقدم:</span>
+        <input type="range" min="0" max="100" value="0" oninput="updateProgress(this)" style="flex:1">
+        <span class="progress-val" style="font-size:12px; color:#f5c842; font-weight:700">0%</span>
+      </div>
+      <div class="goal-progress"><div class="goal-prog-fill" style="width:0%"></div></div>
+    `;
+    list.appendChild(card);
+  }
+
+  function updateProgress(slider) {
+    const val = slider.value;
+    const card = slider.closest('.goal-card');
+    card.querySelector('.progress-val').textContent = val + '%';
+    card.querySelector('.goal-prog-fill').style.width = val + '%';
+  }
+
+  function addBucket() {
+    const list = document.getElementById('bucketList');
+    const item = document.createElement('div');
+    item.className = 'bucket-item';
+    item.innerHTML = `<span class="bucket-star" onclick="toggleStar(this)">⭐</span><input style="flex:1; border:none; background:transparent; font-family:'Tajawal',sans-serif; font-size:14px; color:#2c1810; outline:none; text-align:right" placeholder="أضيفي حلماً...">`;
+    list.appendChild(item);
+    item.querySelector('input').focus();
+  }
+
+  function toggleStar(el) { el.classList.toggle('active'); }
+
+  function countWords() {
+    const text = document.getElementById('freeWriteArea').value.trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    document.getElementById('wordCount').textContent = words + ' كلمة';
+  }
+</script>
+</body>
+</html>
